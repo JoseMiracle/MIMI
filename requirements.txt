@@ -1,0 +1,5 @@
+django==5.0
+django-restframework==3.14.0
+django-cloudinary-storage==0.3.0
+djangorestframework-simplejwt==5.2.2
+ipython==8.19.0
