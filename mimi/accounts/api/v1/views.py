@@ -5,7 +5,7 @@ from mimi.accounts.api.v1.serializers import(
     ChangePasswordSerializer,
     UpdateProfileSerializer,
     ActivateAccountSerializer,
-    BlockUserSerializer,
+   BlockUserSerializer,
     OtpResetPaswordSerializer
 )
 
@@ -41,6 +41,7 @@ class SignInAPIVIew(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
+            
             return Response(serializer.data)
 
 class ChangePasswordAPIView(generics.GenericAPIView):
@@ -87,4 +88,4 @@ class OtpForResetPasswordAPIView(generics.GenericAPIView):
         if serializer.is_valid(raise_exception=True):
             
             return Response({"message": "password changed"}, status=status.HTTP_200_OK)
-    
+

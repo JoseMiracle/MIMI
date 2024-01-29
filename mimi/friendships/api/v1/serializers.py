@@ -2,16 +2,12 @@ from typing import Any
 from rest_framework import serializers
 from mimi.friendships.models import FriendRequest, Friends
 from django.contrib.auth import get_user_model
+from mimi.accounts.api.v1.serializers import UserSerializer
 
 User = get_user_model()
 
 
 
-class UserSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = User
-        fields = ["first_name", "last_name", "image"]
 
 
 

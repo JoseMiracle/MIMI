@@ -7,7 +7,7 @@ from mimi.friendships.api.v1.serializers import(
     UserFriendsSerializer,
 )
 
-from mimi.accounts.models import UsersBlockedByUser
+# from mimi.accounts.models import UsersBlockedByUser
 from rest_framework.response import Response
 
 from mimi.friendships.models import (

@@ -6,7 +6,7 @@ from django.db import transaction
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from mimi.accounts.mails.tokens import account_activation_token
-from mimi.accounts.models import UsersBlockedByUser
+from mimi.accounts.models import BlockedList
 
 
 User = get_user_model()
@@ -23,7 +23,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
             'image',
             'username',
             'email',
-            'password'
+            'password',
+            'date_of_birth'
         ]
         
     
@@ -37,6 +38,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         user.is_active = False
         user.save()
         
+        
 
         """
             Activating account
@@ -46,6 +48,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
         account_activation.send_activation_email(user,current_site_domain)
 
         return user
+    
+
+
+class UserSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "image"]
 
 
 class ActivateAccountSerializer(serializers.Serializer):
@@ -58,7 +68,7 @@ class ActivateAccountSerializer(serializers.Serializer):
         if user is None:
             raise serializers.ValidationError("user doesn't exist")
         if account_activation_token.check_token(user, token) is False:
-           raise serializers.ValidationError("wrong token")
+           raise serializers.ValidationError("wrong token or token expired")
         
         elif (user is not None and account_activation_token.check_token(user, token)):
             user.is_active = True
@@ -76,11 +86,12 @@ class SignInSerializer(serializers.Serializer):
         """
         user = User.objects.filter(email=attrs["email"]).first()
 
-        error = {"credential_error": "Please recheck the credentials provided."}
+        error = {}
         if (user and user.check_password(attrs["password"])) and (user.is_active == True):
             return user
 
         else:
+            error["credential_error"] = "Please recheck the credentials provided."
             raise serializers.ValidationError(error)
 
     def to_representation(self, instance):
@@ -137,19 +148,20 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "address",
+            "image"
         ]
 
 class BlockUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UsersBlockedByUser
-        fields = ["other_user", "is_other_user_blocked"]
+        model = BlockedList
+        fields = ["blocked_user"]
 
     
     def create(self, validated_data):
-        UsersBlockedByUser.objects.create(user=self.context["request"].user,
-                                          other_user=validated_data["other_user"],
-                                          is_other_user_blocked=validated_data["is_other_user_blocked"])
-        print(UsersBlockedByUser.objects.count())
+        BlockedList.objects.create(
+                                    user =self.context["request"].user,
+                                    blocked_user=validated_data["blocked_user"],
+                                    )
         return validated_data
 
 
