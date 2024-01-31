@@ -39,7 +39,7 @@ class JoinRoomRequests(BaseModel):
 
 
 class RoomMembers(BaseModel):
-    is_admin = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     room_members = models.ForeignKey(User, on_delete=models.CASCADE, related_name="current_room_member")
 

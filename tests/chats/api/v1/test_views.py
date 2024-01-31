@@ -5,6 +5,8 @@ from tests.chats.factories import (
     RoomMembersFactory, 
     JoinRoomRequestsFactory,
 )
+from mimi.chats.utils.constants import REJECT_ROOM_REQUEST, ACCEPTED_ROOM_REQUEST
+
 from tests.accounts.factories import UserFactory
 from rest_framework.test import APITestCase
 from  mimi.chats.models import Room, RoomMembers, JoinRoomRequests
@@ -276,8 +278,92 @@ class TestUserRoomRequestAPIView(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertListEqual(response.json(), expected_data)
 
+# accept_or_reject_room_request
+
+class TestAcceptOrRejectUserRoomRequestAPIView(APITestCase):
+    
+    def setUp(self):
+        self.admin = UserFactory(is_active=True, username='admin', email='admin@mail.com')
+        self.room = RoomFactory()
+        self.room_member = RoomMembersFactory(is_admin=True, room=self.room, room_members=self.admin)
+
+    
+    def test_admin_can_reject_user_room_request(self):
+        """Test admin can reject user room request"""
+        user = UserFactory(is_active=True)
+       
+        user_room_request = JoinRoomRequestsFactory(
+            room=self.room,
+            user=user,
+        )
+        
+
+        url = reverse('chats_api_v1:accept_or_reject_room_request', args=[self.room.room_name, user_room_request.id])
+        data = {
+            'decision': REJECT_ROOM_REQUEST
+        }
+        authorization_token = RefreshToken.for_user(self.admin).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        
+        response = self.client.put(url, data=data, format='json', **headers)
+        user_friend_request_obj = JoinRoomRequests.objects.filter(room=self.room, user=user).first()
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(user_friend_request_obj)
+    
+    def test_admin_of_another_room_cannot_reject_or_accept_room_request_of_another_room(self):
+        """Test admin of another room cannot accept or reject or accept the room request of another room"""
+
+        other_room_admin = UserFactory(is_active=True, username='other_admin', email='other_room_admin@mail.com')
+        other_room  = RoomFactory(room_creator_id=other_room_admin.id, room_name="OTHER USER ROOM")
+        other_room_members = RoomMembersFactory(is_admin=True, room=other_room, room_members=other_room_admin)
+
+        user = UserFactory(is_active=True, username='sender', email='sender@mail.com')
+        user_room_request = JoinRoomRequestsFactory(
+            room=self.room, 
+            user=user,
+        )
 
 
+        authorization_token = RefreshToken.for_user(other_room_admin).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        url = reverse('chats_api_v1:accept_or_reject_room_request', args=[self.room.room_name, user_room_request.id])
+        data = {
+            'decision': REJECT_ROOM_REQUEST
+        }
+        
+        response = self.client.put(url, data=data , format='json', **headers)
+        self.assertEqual(response.status_code, 403)
+
+    def test_admin_can_accept_room_request_of_a_user(self):
+        """Test an admin can accept room request of a user"""
+
+        user = UserFactory(is_active=True)
+       
+        user_room_request = JoinRoomRequestsFactory(
+            room=self.room,
+            user=user,
+        )
+        
+
+        url = reverse('chats_api_v1:accept_or_reject_room_request', args=[self.room.room_name, user_room_request.id])
+        data = {
+            'decision': ACCEPTED_ROOM_REQUEST
+        }
+        authorization_token = RefreshToken.for_user(self.admin).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        
+        response = self.client.put(url, data=data, format='json', **headers)
+        user_friend_request_obj = JoinRoomRequests.objects.filter(room=self.room, user=user).first()
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(user_friend_request_obj)
+
+
+
+
+
+        
+    
+    
 
 
 
