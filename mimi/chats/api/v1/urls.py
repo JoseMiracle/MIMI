@@ -5,6 +5,10 @@ from mimi.chats.api.v1.views import (
     RoomAPIView,
     UserRoomRequestAPIVIew,
     AcceptOrRejectUserRoomRequestAPIView,
+    UserRoomsAPIView,
+    GetAllUsersInTheRoomAPIView,
+    RemoveUserFromARoomAPIView,
+
 )
 
 app_name = "chats"
@@ -27,6 +31,13 @@ urlpatterns = [
         
     path('accept_or_reject_room_request/<str:room_name>/<uuid:user_room_request_id>/', 
          AcceptOrRejectUserRoomRequestAPIView.as_view(), 
-         name='accept_or_reject_room_request')
+         name='accept_or_reject_room_request'),
+
+    path('user-rooms/', UserRoomsAPIView.as_view(), name='user_rooms'),
+    path('get-user-in-room/<str:room_name>/',
+          GetAllUsersInTheRoomAPIView.as_view(), 
+          name='get_user_in_room'),
+
+    path('remove-user-from-room/<str:room_name>/<str:username>/', RemoveUserFromARoomAPIView.as_view(), name='remove_user_from_room')
 
 ]

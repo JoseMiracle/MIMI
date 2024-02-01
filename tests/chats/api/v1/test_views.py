@@ -120,12 +120,10 @@ class TestEditOrDeleteRoomAPIView(APITestCase):
         self.user2 = UserFactory(email='mimi@mail.com', is_active=True, username='mimi')
 
         
-
-
     def test_admin_of_room_can_edit_room_details(self):
         """Test admin of room can edit room details like description, and number_of_persons, alone"""
         room = RoomFactory(room_creator_id=str(self.user.id), room_name="SPECIAL ROOM")
-        room_member = RoomMembersFactory(is_admin=True, room=room, room_members=self.user)
+        room_member_as_admin = RoomMembersFactory(is_admin=True, room=room, room_member=self.user)
 
         url = reverse('chats_api_v1:edit_or_delete_room', args=[room.room_name])
         valid_data = {
@@ -143,7 +141,7 @@ class TestEditOrDeleteRoomAPIView(APITestCase):
     def test_nonadmin_of_room_can_edit_cannot_room_details(self):
         """Test nonadmin of room cannot edit room details like description, and number_of_persons, alone"""
         room = RoomFactory(room_creator_id=str(self.user), room_name="SPECIAL ROOM")
-        room_member = RoomMembersFactory(is_admin=True, room=room, room_members=self.user)
+        room_member_as_admin = RoomMembersFactory(is_admin=True, room=room, room_member=self.user)
         user2 = UserFactory(is_active=True, email='user2.mail.com', username='user2')
         
         url = reverse('chats_api_v1:edit_or_delete_room', args=[room.room_name])
@@ -165,7 +163,7 @@ class TestEditOrDeleteRoomAPIView(APITestCase):
         """Test admin can delete room"""
 
         room = RoomFactory(room_creator_id=str(self.user.id), room_name="SPECIAL ROOM")
-        room_member = RoomMembersFactory(is_admin=True, room=room, room_members=self.user)
+        room_member_as_admin = RoomMembersFactory(is_admin=True, room=room, room_member=self.user)
 
         authorization_token = RefreshToken.for_user(self.user).access_token
         headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
@@ -278,14 +276,13 @@ class TestUserRoomRequestAPIView(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertListEqual(response.json(), expected_data)
 
-# accept_or_reject_room_request
 
 class TestAcceptOrRejectUserRoomRequestAPIView(APITestCase):
     
     def setUp(self):
         self.admin = UserFactory(is_active=True, username='admin', email='admin@mail.com')
         self.room = RoomFactory()
-        self.room_member = RoomMembersFactory(is_admin=True, room=self.room, room_members=self.admin)
+        self.room_member = RoomMembersFactory(is_admin=True, room=self.room, room_member=self.admin)
 
     
     def test_admin_can_reject_user_room_request(self):
@@ -309,13 +306,14 @@ class TestAcceptOrRejectUserRoomRequestAPIView(APITestCase):
         user_friend_request_obj = JoinRoomRequests.objects.filter(room=self.room, user=user).first()
         self.assertEqual(response.status_code, 200)
         self.assertIsNone(user_friend_request_obj)
+        self.assertEqual(RoomMembers.objects.count(), 1) 
     
     def test_admin_of_another_room_cannot_reject_or_accept_room_request_of_another_room(self):
         """Test admin of another room cannot accept or reject or accept the room request of another room"""
 
         other_room_admin = UserFactory(is_active=True, username='other_admin', email='other_room_admin@mail.com')
         other_room  = RoomFactory(room_creator_id=other_room_admin.id, room_name="OTHER USER ROOM")
-        other_room_members = RoomMembersFactory(is_admin=True, room=other_room, room_members=other_room_admin)
+        other_room_member = RoomMembersFactory(is_admin=True, room=other_room, room_member=other_room_admin)
 
         user = UserFactory(is_active=True, username='sender', email='sender@mail.com')
         user_room_request = JoinRoomRequestsFactory(
@@ -356,7 +354,151 @@ class TestAcceptOrRejectUserRoomRequestAPIView(APITestCase):
         user_friend_request_obj = JoinRoomRequests.objects.filter(room=self.room, user=user).first()
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(user_friend_request_obj)
+        self.assertEqual(JoinRoomRequests.objects.filter(room=self.room, user=user).first().room_request, str(ACCEPTED_ROOM_REQUEST))
+        self.assertEqual(RoomMembers.objects.count(), 2)
 
+
+
+class TestUserRoomsAPIView(APITestCase):
+    
+    def setUp(self):
+        self.user = UserFactory(is_active=True)
+        self.url = reverse('chats_api_v1:user_rooms')
+        self.room_1 = RoomFactory(room_name='ROOM 1')
+        self.room_2 = RoomFactory(room_name='ROOM 2')
+        self.room_3 = RoomFactory(room_name='ROOM 3')
+
+    def test_authenticted_user_can_get_all_rooms_they_belong(self):
+        """Test authenticated user can get the room the belong to"""
+
+        authorization_token = RefreshToken.for_user(self.user).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        joined_room_1 = JoinRoomRequestsFactory(room=self.room_1, user=self.user, room_request=ACCEPTED_ROOM_REQUEST)
+        joined_room_2 = JoinRoomRequestsFactory(room=self.room_2, user=self.user, room_request=ACCEPTED_ROOM_REQUEST)
+        joined_room_2 = JoinRoomRequestsFactory(room=self.room_3, user=self.user, room_request=ACCEPTED_ROOM_REQUEST)
+
+        response = self.client.get(self.url, **headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), JoinRoomRequests.objects.filter(user=self.user, room_request=ACCEPTED_ROOM_REQUEST).count())
+
+
+    def test_unauthenticated_user_cannot_get_rooms_they_belong(self):
+        """Test unauthenticated user cannot get the rooms they belong"""
+        joined_room_1 = JoinRoomRequestsFactory(room=self.room_1, user=self.user, room_request=ACCEPTED_ROOM_REQUEST)
+        joined_room_2 = JoinRoomRequestsFactory(room=self.room_2, user=self.user, room_request=ACCEPTED_ROOM_REQUEST)
+        joined_room_2 = JoinRoomRequestsFactory(room=self.room_3, user=self.user, room_request=ACCEPTED_ROOM_REQUEST)
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 401)
+        self.assertIn(response.json()['detail'], 'Authentication credentials were not provided.')
+
+
+class TestGetAllUsersInTheRoomAPIView(APITestCase):
+
+    def setUp(self):
+        self.user = UserFactory(is_active=True)
+        self.room = RoomFactory()
+        self.user1 = UserFactory(is_active=True, username='user1', email='user1@mail.com')
+        self.user2 = UserFactory(is_active=True, username='user2', email='user2@mail.com')
+        self.user3 = UserFactory(is_active=True, username='user3', email='user3@mail.com')
+
+       
+        
+    def test_authenticated_user_in_the_room_they_belong_can_get_the_users_in_the_room(self):
+        """Test user can get all users in a room"""
+        room_member = RoomMembersFactory(room=self.room, room_member=self.user)
+        room_member1 = RoomMembersFactory(room=self.room, room_member=self.user1)
+        room_member2 = RoomMembersFactory(room=self.room, room_member=self.user2)
+        room_member3 = RoomMembersFactory(room=self.room, room_member=self.user3)
+        
+        url = reverse('chats_api_v1:get_user_in_room', args=[self.room.room_name])
+        authorization_token = RefreshToken.for_user(self.user).access_token
+        
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        response = self.client.get(url, **headers )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), RoomMembers.objects.count())
+
+    
+
+    def test_authenticated_user_not_in_a_room_cannot_get_users_in_that_room(self):
+        """Test User from another cannot get users in that room"""
+        user_room = RoomFactory(room_name="USER NEW ROOM")
+        other_room = RoomFactory(room_name="OTHER ROOM")
+        
+        
+        room_member = RoomMembersFactory(room=user_room, room_member=self.user)
+        other_room_member1 = RoomMembersFactory(room=other_room, room_member=self.user1)
+        other_room_member2 = RoomMembersFactory(room=other_room, room_member=self.user2)
+        other_room_member3 = RoomMembersFactory(room=other_room, room_member=self.user3)
+
+        url = reverse('chats_api_v1:get_user_in_room', args=[other_room.room_name])
+        authorization_token = RefreshToken.for_user(self.user).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        response = self.client.get(url, **headers)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("you don't belong", response.json()['error'])
+       
+        
+
+class TestRemoveUserFromARoomAPIView(APITestCase):
+
+    def setUp(self):
+        self.admin = UserFactory(is_active=True)
+        self.room = RoomFactory()
+        self.room_member = RoomMembersFactory(room_member=self.admin, room=self.room, is_admin=True)
+
+
+    def test_authenticated_admin_of_room_can_remove_a_user(self):
+        """Test authenticated admin of room can remove a room member"""
+        user = UserFactory(is_active=True, username='user', email='user@mail.com')
+        user_joined_room = JoinRoomRequestsFactory(room=self.room, user=user, room_request=ACCEPTED_ROOM_REQUEST)
+        room = RoomMembersFactory(room=self.room, room_member=user)
+        
+        url = reverse('chats_api_v1:remove_user_from_room', args=[self.room.room_name, user.username])
+        authorization_token = RefreshToken.for_user(self.admin).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        response = self.client.post(url, format='json', **headers)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(RoomMembers.objects.filter(room=self.room, room_member=user).first())
+        self.assertIsNone(JoinRoomRequests.objects.filter(room=self.room, user=user).first())
+    
+    def test_unauthenticated__admin_of_room_can_remove_a_user(self):
+        """Test authenticated admin of room can remove a room member"""
+        user = UserFactory(is_active=True, username='user', email='user@mail.com')
+        user_joined_room = JoinRoomRequestsFactory(room=self.room, user=user, room_request=ACCEPTED_ROOM_REQUEST)
+        room = RoomMembersFactory(room=self.room, room_member=user)
+        
+        url = reverse('chats_api_v1:remove_user_from_room', args=[self.room.room_name, user.username])
+ 
+        response = self.client.post(url, format='json')
+        self.assertEqual(response.status_code, 401)
+        self.assertIsNotNone(RoomMembers.objects.filter(room=self.room, room_member=user).first())
+        self.assertIsNotNone(JoinRoomRequests.objects.filter(room=self.room, user=user).first())
+
+    def test_admin_from_another_room_cannot_remove_a_user_in_their_room(self):
+        """"Test admin fromm am=nother room cannnot remove a user not in their room"""
+        another_room_admin = UserFactory(is_active=True, username='another_room_admin', email='anotheroomadmin@mail.com')
+        another_room = RoomFactory(room_name="ANOTHER ROOM")
+        another_room_member = RoomMembersFactory(room_member=another_room_admin, room=another_room, is_admin=True)
+        
+        
+        user = UserFactory(is_active=True, username='user', email='user@mail.com')
+        user_accepted_room_request = JoinRoomRequestsFactory(room=self.room, user=user, room_request=ACCEPTED_ROOM_REQUEST)
+        room_member = RoomMembersFactory(room=self.room, room_member=user)
+
+
+        url = reverse('chats_api_v1:remove_user_from_room', args=[self.room.room_name, user.username])
+
+        authorization_token = RefreshToken.for_user(another_room_admin).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        response = self.client.post(url, format='json', **headers)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("Not a member of the room or room doesn't exist", response.json()['detail'])
+        self.assertIsNotNone(user_accepted_room_request)
+
+        
 
 
 

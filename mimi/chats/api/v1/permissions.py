@@ -1,7 +1,9 @@
 from rest_framework.permissions import BasePermission
 from mimi.chats.models import RoomMembers, Room
 
-class IsRoomAdmin(BasePermission):
+class IsRoomAdmin(BasePermission): 
+  
+    message = "Not a member of the room or room doesn't exist"
     
 
     def has_permission(self, request, view):
@@ -15,9 +17,9 @@ class IsRoomAdmin(BasePermission):
       if not room:
             return False  # or handle the case as appropriate
         
-      room_member = RoomMembers.objects.filter(room=room, room_members=request.user).first()
+      member = RoomMembers.objects.filter(room=room, room_member=request.user).first()
         
         # Check if room_member is None before accessing attributes
-      if room_member and room_member.is_admin:
+      if member and member.is_admin:
          return True
       return False

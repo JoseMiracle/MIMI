@@ -62,7 +62,7 @@ class RoomSerializer(serializers.ModelSerializer):
         """This is for adding the creator of the room as a room member and making the room creator an admin"""
         room_members = RoomMembers.objects.create(
             room=room_instance,
-            room_members_id=room_instance.room_creator_id,
+            room_member_id=room_instance.room_creator_id,
             is_admin=True
             )
         return room_instance
@@ -102,7 +102,17 @@ class JoinRoomRequestSerializer(serializers.ModelSerializer):
 
 class AcceptOrRejectUserRoomRequestSerializer(serializers.Serializer):
     decision = serializers.CharField(allow_blank=False)
-    
-    
-    
 
+
+
+class GetAllUsersInTheRoomSerializer(serializers.ModelSerializer):
+    room_member = serializers.ReadOnlyField(source='room_member.username')
+    room = serializers.ReadOnlyField(source='room.room_name')
+   
+    class Meta:
+        model = RoomMembers
+        fields = ['room_member', 'room']
+
+class RemoveUserFromARoomSerializer(serializers.Serializer):
+    username = serializers.CharField(allow_blank=False)
+    room_name = serializers.CharField(allow_blank=False)

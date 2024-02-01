@@ -5,7 +5,7 @@ from mimi.accounts.api.v1.serializers import(
     ChangePasswordSerializer,
     UpdateProfileSerializer,
     ActivateAccountSerializer,
-   BlockUserSerializer,
+    BlockUserSerializer,
     OtpResetPaswordSerializer
 )
 
