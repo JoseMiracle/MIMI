@@ -8,8 +8,11 @@ from mimi.accounts.mails.tokens import account_activation_token
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from mimi.accounts.models import BlockedList
+from django.contrib.auth.hashers import check_password
 
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login,authenticate
+from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser
 User  = get_user_model()
 
 class TestRegistrationAPIView(APITestCase):
@@ -225,7 +228,7 @@ class TestBlockUserAPIView(APITestCase):
 
 
 
-class TestChangeAPIView(APITestCase):
+class TestChangePasswordAPIView(APITestCase):
 
     def setUp(self):
         self.url = reverse('accounts_api_v1:change_password')
@@ -234,6 +237,24 @@ class TestChangeAPIView(APITestCase):
     
     def test_authorized_user_can_change_their_password(self):
         """Test authorized user can change their password"""
+        self.user.set_password('password')
+        self.user.save()
+
+        
+        data = {
+            'old_password': 'password',
+            'new_password': 'mynewpassword',
+            'confirm_password': 'mynewpassword'
+        }
+
+        authorization_token = RefreshToken.for_user(self.user).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        
+        response = self.client.post(self.url, data=data, **headers)
+        self.user.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(check_password('mynewpassword', self.user.password))
+
 
 
 

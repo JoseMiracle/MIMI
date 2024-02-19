@@ -9,6 +9,7 @@ User = get_user_model()
 
 
 
+
 class Message(BaseModel):
     sender = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, related_name="sender_mesages", null=True )
     receiver = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, related_name="receiver_messages", null=True)
@@ -44,5 +45,10 @@ class RoomMembers(BaseModel):
     room_member = models.ForeignKey(User, on_delete=models.CASCADE, related_name="current_room_member")
 
 
+class RoomMessages(BaseModel):    
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    message = models.TextField()
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_locked = models.BooleanField(default=False)
+    
 
-   

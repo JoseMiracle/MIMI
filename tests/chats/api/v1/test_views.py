@@ -500,6 +500,42 @@ class TestRemoveUserFromARoomAPIView(APITestCase):
 
         
 
+class TestUserLeaveRoomAPIView(APITestCase):
+
+    def setUp(self):
+        self.user = UserFactory(is_active=True)
+        self.room = RoomFactory()
+        self.room_request_by_user = JoinRoomRequestsFactory(room=self.room, user=self.user, room_request=ACCEPTED_ROOM_REQUEST)
+        self.room_member = RoomMembersFactory(room=self.room, room_member=self.user)
+        self.url = reverse('chats_api_v1:user_leave_room', args=[self.room.room_name])
+
+
+    def test_authenticated_user_can_leave_room_they_joined(self):
+        """Test user can leave room they joined"""
+        authorization_token = RefreshToken.for_user(self.user).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        response = self.client.post(self.url, format='json', **headers)
+        self.assertEqual(response.status_code, 200 )
+        self.assertIsNone(RoomMembers.objects.filter(room=self.room, room_member=self.user).first())
+    
+    def test_unauthenticated_user_cannot_leave_room_they_joined(self):
+        """Test user can leave room they joined"""
+        response = self.client.post(self.url, format='json')
+        self.assertEqual(response.status_code, 401)
+    
+    def test_another_user_cannot_remove_user_from_another_room(self):
+        """Test another user cannot remove user from another room"""
+        another_user = UserFactory(is_active=True, username='another_user', email='anotheruser@mail.com')
+        authorization_token = RefreshToken.for_user(another_user).access_token
+        headers = {'HTTP_AUTHORIZATION': f'Bearer {authorization_token}'}
+        
+        response = self.client.post(self.url, format='json', **headers)
+        self.assertEqual(response.status_code, 400)
+        self.assertIsNotNone(RoomMembers.objects.filter(room=self.room, room_member=self.user).first())
+        
+
+
+
 
 
 

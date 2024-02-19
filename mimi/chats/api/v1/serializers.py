@@ -34,7 +34,7 @@ class EditOrDeleteMessageSerializer(serializers.ModelSerializer):
     
 
 class RoomSerializer(serializers.ModelSerializer):
-    room_name = serializers.CharField(min_length=5, allow_blank=False)
+    room_name = serializers.CharField(min_length=5, allow_blank=False, required=True)
     class Meta:
         model = Room
         fields = [

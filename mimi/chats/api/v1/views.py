@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-
+from rest_framework.views import APIView
 from mimi.chats.models import Message
 from mimi.chats.api.v1.serializers import (
     EditOrDeleteMessageSerializer,
@@ -110,9 +110,8 @@ class AcceptOrRejectUserRoomRequestAPIView(generics.RetrieveUpdateDestroyAPIView
                 "message": "user room request accepted."
             }
         )
-        
-# USERS
-    
+
+
 class UserRoomRequestAPIVIew(generics.ListCreateAPIView):
     serializer_class = JoinRoomRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -168,11 +167,10 @@ class GetAllUsersInTheRoomAPIView(generics.ListAPIView):
         return super().get(request, *args, **kwargs)
 
 
-class RemoveUserFromARoomAPIView(generics.GenericAPIView):
+class RemoveUserFromARoomAPIView(APIView):
 
     permission_classes = [permissions.IsAuthenticated, IsRoomAdmin]
-    serializer_class = RemoveUserFromARoomSerializer
-
+    
     def get_object(self):
         room = Room.objects.filter(room_name=self.kwargs['room_name']).first()
         user = User.objects.filter(username=self.kwargs['username']).first()
@@ -197,4 +195,30 @@ class RemoveUserFromARoomAPIView(generics.GenericAPIView):
         }, status=status.HTTP_400_BAD_REQUEST)
     
 
+
+class UserLeaveRoomAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        room = Room.objects.filter(room_name=self.kwargs['room_name']).first()
+        room_member_obj = RoomMembers.objects.filter(room=room, room_member=self.request.user).first()   
         
+        if room and room_member_obj:
+            return room_member_obj
+        return None
+
+    def post(self, request, *args, **kwargs):
+        room_member_obj = self.get_object()
+
+        if room_member_obj is not None:
+            joined_room_request_obj = JoinRoomRequests.objects.filter(room=room_member_obj.room, user=room_member_obj.room_member).first()
+            joined_room_request_obj.delete()
+            room_member_obj.delete()
+            return Response({"message": f"{room_member_obj.room_member.username} removed from room"})
+
+        return Response({
+            "errror": "room doesn't exist or unknown user"
+        }, status=status.HTTP_400_BAD_REQUEST)    
+
+
+

@@ -43,9 +43,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         """
             Activating account
         """
-        
-        current_site_domain = self.context["request"].META['HTTP_HOST']
-        account_activation.send_activation_email(user,current_site_domain)
+        # NOTE: THE COMMENTED LINE OF CODE BELOW WILL BE UNCOMMENTED, AFTER OLADISEA'S  TEST
+
+        # current_site_domain = self.context["request"].META['HTTP_HOST']
+        # account_activation.send_activation_email(user,current_site_domain)
 
         return user
     
