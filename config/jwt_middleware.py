@@ -20,7 +20,10 @@ class JWTAuthMiddleware(BaseMiddleware):
                 scope['user'] = user
 
             else:
-                scope['error'] = 'User not Found'        
+                scope['error'] = 'User not Found'
+
+        if token == 'No auth token':
+            scope['error'] = 'Provide an auth token'    
     
                 
         return await super().__call__(scope, receive, send)
@@ -30,10 +33,12 @@ class JWTAuthMiddleware(BaseMiddleware):
         headers = dict(scope.get("headers", []))
 
         auth_header = headers.get(b'authorization', b'').decode('utf-8')
+
         if auth_header.startswith('Bearer '):
             return auth_header.split(' ')[1]
-        return None
-
+        
+        if auth_header is None :
+            return 'No auth token'  
     @database_sync_to_async
     def get_user_from_token(self, token):
             try:

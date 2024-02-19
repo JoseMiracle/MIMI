@@ -16,6 +16,9 @@ class Message(BaseModel):
     edit_count = models.IntegerField(default=0)
     message = models.TextField()
 
+    def __str__(self):
+        return self.message
+
 
 
 class Room(BaseModel):
