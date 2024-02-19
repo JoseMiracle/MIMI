@@ -8,4 +8,4 @@ ipython==8.19.0
 pytest-django==4.7.0
 pytest-factoryboy==2.6.0
 channels-redis==4.2.0
-dj-database-url==2.2.0
+dj-database-url==2.1.0
