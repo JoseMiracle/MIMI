@@ -25,8 +25,9 @@ CHANNEL_LAYERS = {
 
 
 
+
 DATABASES = {
-	"default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
+	"default": dj_database_url.parse("postgres://db_utqx_user:OsuXNepP9XDWL8a6woCInmN3m2sf7LAn@dpg-cna36h7109ks73a0bqg0-a.oregon-postgres.render.com/db_utqx")
 }
 
 

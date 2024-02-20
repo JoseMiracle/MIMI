@@ -49,7 +49,6 @@ else:
     
 DEBUG = bool(os.getenv('DEBUG'))
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
 
 
 # SIMPLE JWT SETTINGS
@@ -92,5 +91,4 @@ CHANNEL_LAYERS = {
 
 
 ASGI_APPLICATION = "config.asgi.application"
-
-
+AUTH_USER_MODEL = 'accounts.CustomUser'
