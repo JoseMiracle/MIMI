@@ -139,9 +139,17 @@ class ChangePasswordSerializer(serializers.Serializer):
         ):
             attrs["status"] = "true"
             return attrs
-        
-
-
+    
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'first_name',
+            'username',
+            'last_name'
+        ]
+    
 class UpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

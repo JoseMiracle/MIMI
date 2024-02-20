@@ -139,3 +139,5 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     # Other validators...
 ]
+
+DJANGO_SETTINGS_MODULE = os.getenv('DJANGO_sETTINGS_MODULE')
