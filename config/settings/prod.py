@@ -25,7 +25,6 @@ CHANNEL_LAYERS = {
 
 
 
-
 DATABASES = {
 	"default": dj_database_url.parse(os.getenv('DATABASE_URL'))
 }

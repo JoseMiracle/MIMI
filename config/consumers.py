@@ -12,7 +12,6 @@ class DirectMessageConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         if self.is_error():
-            print("error")
             error = {
                 'error': str(self.scope['error'])
             }
@@ -62,7 +61,6 @@ class DirectMessageConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def message_information(self, message):
-        print(message.message)
         return {
             "message": message.message,
             "sender": message.sender.username       
