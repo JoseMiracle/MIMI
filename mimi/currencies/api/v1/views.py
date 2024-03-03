@@ -3,7 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
 
-import requests
+import requests, logging
+logging.basicConfig(level=logging.INFO)  # Adjust the logging level as needed
+
 
 # Create your views here.
 
@@ -46,7 +48,7 @@ class CurrencyConverterAPIView(APIView):
 
         try:
             response = requests.get(url, headers=headers, data = payload)
-            print(response.json())
+            logging.info(response.json())
             converted_currency = round(response.json()["result"], 2)
             return converted_currency
         except Exception as e:
