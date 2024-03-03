@@ -34,10 +34,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         if "username" not in validated_data:
-             validated_data["username"] = (
-                                        f"{validated_data['first_name']}000"
-                                        f"{len(validated_data['first_name']) + len(validated_data['email'])}"
-                                    )
+             validated_data["username"] = f"{validated_data["first_name"]} {validated_data["last_name"]}0001"
         user = User.objects.create(**validated_data)
         user.set_password(validated_data["password"])
         user.is_active = True
