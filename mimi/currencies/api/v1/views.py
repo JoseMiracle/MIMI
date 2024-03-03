@@ -44,11 +44,12 @@ class CurrencyConverterAPIView(APIView):
         "apikey": settings.CURRENCY_API_KEY 
         }
 
-        response = requests.get(url, headers=headers, data = payload)        
-        print(response.json())
-        converted_currency = round(response.json()["result"], 2)
-        return converted_currency
-
+        try:
+            response = requests.get(url, headers=headers, data = payload)        
+            converted_currency = round(response.json()["result"], 2)
+            return converted_currency
+        except Exception as e:
+            print(e)
 
 
 
