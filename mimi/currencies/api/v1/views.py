@@ -45,7 +45,8 @@ class CurrencyConverterAPIView(APIView):
         }
 
         try:
-            response = requests.get(url, headers=headers, data = payload)        
+            response = requests.get(url, headers=headers, data = payload)
+            print(response.json())
             converted_currency = round(response.json()["result"], 2)
             return converted_currency
         except Exception as e:
