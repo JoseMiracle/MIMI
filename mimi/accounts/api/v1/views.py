@@ -99,4 +99,3 @@ class OtpForResetPasswordAPIView(generics.GenericAPIView):
         if serializer.is_valid(raise_exception=True):
             
             return Response({"message": "password changed"}, status=status.HTTP_200_OK)
-

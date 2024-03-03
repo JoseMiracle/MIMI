@@ -25,7 +25,9 @@ urlpatterns = [
     path('api/v1/accounts/', include('mimi.accounts.api.v1.urls', namespace='accounts_api_v1')),
     path('api/v1/friendships/', include('mimi.friendships.api.v1.urls', namespace='friendships_api_v1')),
     path('api/v1/posts/', include('mimi.posts.api.v1.urls', namespace='posts_api_v1' )),
-    path('api/v1/chats/', include('mimi.chats.api.v1.urls', namespace='chats_api_v1'))
+    path('api/v1/chats/', include('mimi.chats.api.v1.urls', namespace='chats_api_v1')),
+    path('api/v1/currencies/', include('mimi.currencies.api.v1.urls', namespace='currencies_api_v1')),
+
 ]
 
 if settings.DEBUG:

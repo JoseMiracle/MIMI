@@ -114,6 +114,7 @@ class CommentToPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentToPost
         fields = [
+            "id",
             "post",
             "user_that_comment",
             "comment",
@@ -154,4 +155,38 @@ class CommentToPostReactionSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
     
 
+
+class ReplyToCommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CommentToPost
+        fields = [
+            'post',
+            'parent_comment',
+            'comment',
+        ]
+
+    def create(self, validated_data):
+        
+        reply = CommentToPost.objects.create(comment=validated_data["comment"], 
+                                             post=validated_data["post"], 
+                                             parent_comment=validated_data["parent_comment"], 
+                                             user_that_comment=self.context['request'].user
+                                             )
+        return reply
+
+
+class RepliesToCommentSerializer(serializers.ModelSerializer):
+    # replies_to_comment = ReplyToCommentSerializer()
+    user_that_comment = UserSerializer()
+    class Meta:
+        model = CommentToPost
+        fields = [
+            'id',
+            'comment',
+            'user_that_comment'
+        ]
+
     
+    def get_field_names(self, declared_fields, info):
+        return super().get_field_names(declared_fields, info)

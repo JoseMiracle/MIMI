@@ -6,7 +6,8 @@ from mimi.accounts.api.v1.views import (
     UpdateProfileAPIView,
     ActivateAccountAPIView,
     BlockUserAPIView,
-    UserProfileAPIView
+    UserProfileAPIView,
+    
 )
 
 app_name = "accounts"
@@ -18,5 +19,6 @@ urlpatterns = [
     path('block-user/', BlockUserAPIView.as_view(), name='block_user'),
     path('change-password/', ChangePasswordAPIView.as_view(), name='change_password'),
     path('update-profile/', UpdateProfileAPIView.as_view(), name="update_profile"),
-    path('profile/', UserProfileAPIView.as_view(), name='profile')   
+    path('profile/', UserProfileAPIView.as_view(), name='profile'),
+       
 ]

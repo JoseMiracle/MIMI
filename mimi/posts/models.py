@@ -63,6 +63,7 @@ class PostReaction(BaseModel):
 
 class CommentToPost(BaseModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comment")
+    parent_comment = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
     user_that_comment =  models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.TextField()
     edited = models.BooleanField(default=False)

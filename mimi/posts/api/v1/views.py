@@ -7,6 +7,8 @@ from mimi.posts.api.v1.serializers import(
     UpdatePostSerializer,
     ReactionToPostSerializer,
     CommentToPostSerializer,
+    ReplyToCommentSerializer,
+    RepliesToCommentSerializer,
 
 )
 from mimi.posts.models import Post, CommentToPost
@@ -89,7 +91,7 @@ class CommentToPostAPIView(generics.ListCreateAPIView):
 
      def get_queryset(self):
           post = Post.objects.filter(id=self.kwargs['post_id']).first()
-          comments_to_post_objs = post.post_comment.all()
+          comments_to_post_objs = CommentToPost.objects.filter(post=post, parent_comment=None)
           print(comments_to_post_objs.count())
           return comments_to_post_objs
      
@@ -107,3 +109,25 @@ class CommentToPostReactionAPIVIew(generics.CreateAPIView):
      def post(self, request, *args, **kwargs):
           return super().post(request, *args, **kwargs)
 
+
+class ReplyToCommentAPIView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ReplyToCommentSerializer
+
+    def post(self, request, *args, **kwargs):
+         return super().post(request, *args, **kwargs)
+    
+
+
+
+class RepliesToCommentAPIView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = RepliesToCommentSerializer
+    
+    def get_queryset(self):
+        parent_comment_id = self.kwargs['parent_comment_id'] 
+        nested_replies = CommentToPost.objects.filter(
+             parent_comment_id=parent_comment_id).select_related('user_that_comment')
+        return nested_replies
+    
+    

@@ -33,6 +33,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
     
     @transaction.atomic
     def create(self, validated_data):
+        if "username" not in validated_data:
+            validated_data["username"] = f"{validated_data["first_name"]}000{len(validated_data["first_name"])+len(validated_data["email"])}"
         user = User.objects.create(**validated_data)
         user.set_password(validated_data["password"])
         user.is_active = True
@@ -97,7 +99,10 @@ class SignInSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         refresh = RefreshToken.for_user(instance)
-        return {"refresh": str(refresh), "access_token": str(refresh.access_token)}
+        return {"refresh": str(refresh), 
+                "access_token": str(refresh.access_token),
+                "user_profile": UserSerializer(instance).data
+                }
     
 
 
@@ -191,6 +196,8 @@ class OtpResetPaswordSerializer(serializers.Serializer):
 
 
 
+# MIMI, BRIGHT, JOSE
 
+"""
 
-
+"""

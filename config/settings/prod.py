@@ -9,7 +9,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.getenv('API_SECRET')
 }
 
-DEBUG = bool(int(os.getenv('DEBUG')))
+DEBUG = bool(int(os.getenv('DEBUG', 0)))
 
 REDIS_URL = os.getenv('REDIS_URL')
 
