@@ -52,7 +52,7 @@ class CurrencyConverterAPIView(APIView):
             converted_currency = round(response.json()["result"], 2)
             return converted_currency
         except Exception as e:
-            print(e)
+            logging.error(e)
 
 
 
