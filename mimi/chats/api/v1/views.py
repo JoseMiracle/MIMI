@@ -8,7 +8,7 @@ from mimi.chats.api.v1.serializers import (
     JoinRoomRequestSerializer,
     AcceptOrRejectUserRoomRequestSerializer,
     GetAllUsersInTheRoomSerializer,
-    RemoveUserFromARoomSerializer,
+    MessageSerializer,
 )
 from mimi.chats.utils.constants import (
     PENDING_ROOM_REQUEST,
@@ -21,7 +21,10 @@ from mimi.chats.models import (
     JoinRoomRequests,
     RoomMembers,
 )
+
 from django.contrib.auth import get_user_model
+from django.db.models import Q
+
 
 User = get_user_model()
 
@@ -222,3 +225,17 @@ class UserLeaveRoomAPIView(APIView):
 
 
 
+class MessageAPIView(generics.ListAPIView):
+    serializer_class = MessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        
+        condition_1 = Q(receiver=self.kwargs["other_user_id"], sender=self.request.user)
+        condition_2 = Q(sender=self.kwargs["other_user_id"], receiver=self.request.user) 
+        message_queryset = Message.objects.filter(condition_1 | condition_2).all()
+        
+        return message_queryset
+    
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)

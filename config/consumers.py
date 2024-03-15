@@ -36,6 +36,7 @@ class DirectMessageConsumer(AsyncWebsocketConsumer):
         if self.scope.get('user') is not None:
             sender_id = self.scope.get('user')
 
+
             text_data_json = json.loads(text_data)
             
             message = text_data_json['message']

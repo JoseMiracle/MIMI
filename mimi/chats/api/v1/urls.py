@@ -9,6 +9,7 @@ from mimi.chats.api.v1.views import (
     GetAllUsersInTheRoomAPIView,
     RemoveUserFromARoomAPIView,
     UserLeaveRoomAPIView,
+    MessageAPIView,
 
 )
 
@@ -43,6 +44,7 @@ urlpatterns = [
          RemoveUserFromARoomAPIView.as_view(), 
          name='remove_user_from_room'),
      
-     path('user-leave-room/<str:room_name>/', UserLeaveRoomAPIView.as_view(), name='user_leave_room')
+     path('user-leave-room/<str:room_name>/', UserLeaveRoomAPIView.as_view(), name='user_leave_room'),
 
+     path("get-message/<uuid:other_user_id>/", MessageAPIView.as_view(), name="get_message")
 ]
