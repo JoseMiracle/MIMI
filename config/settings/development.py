@@ -23,7 +23,8 @@ THIRD_PARTY_APPS = [
     "cloudinary_storage",
     "cloudinary",
     "channels",
-    "drf_standardized_errors"
+    "drf_standardized_errors",
+    "drf_spectacular"
 
 ]
 
@@ -41,7 +42,8 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler"
+    "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     
 }
 
@@ -100,3 +102,11 @@ ASGI_APPLICATION = "config.asgi.application"
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 CURRENCY_API_KEY = os.getenv('CURRENCY_API_KEY')
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'MIMI',
+    'DESCRIPTION': 'CHAT APPLICATION',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    
+}

@@ -1,0 +1,1677 @@
+openapi: 3.0.3
+info:
+  title: MIMI
+  version: 1.0.0
+  description: CHAT APPLICATION
+paths:
+  /api/v1/accounts/activate/{uidb64}/{token}/:
+    get:
+      operationId: api_v1_accounts_activate_retrieve
+      parameters:
+      - in: path
+        name: token
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: uidb64
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/accounts/block-user/:
+    get:
+      operationId: api_v1_accounts_block_user_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlockUser'
+          description: ''
+    post:
+      operationId: api_v1_accounts_block_user_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BlockUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BlockUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockUser'
+          description: ''
+  /api/v1/accounts/change-password/:
+    post:
+      operationId: api_v1_accounts_change_password_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangePassword'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePassword'
+          description: ''
+  /api/v1/accounts/profile/:
+    get:
+      operationId: api_v1_accounts_profile_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+  /api/v1/accounts/registration/:
+    post:
+      operationId: api_v1_accounts_registration_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registration'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Registration'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Registration'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Registration'
+          description: ''
+  /api/v1/accounts/sign-in/:
+    post:
+      operationId: api_v1_accounts_sign_in_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignIn'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SignIn'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignIn'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignIn'
+          description: ''
+  /api/v1/accounts/update-profile/:
+    get:
+      operationId: api_v1_accounts_update_profile_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateProfile'
+          description: ''
+    put:
+      operationId: api_v1_accounts_update_profile_update
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdateProfile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateProfile'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateProfile'
+          description: ''
+  /api/v1/chats/accept_or_reject_room_request/{room_name}/{user_room_request_id}/:
+    get:
+      operationId: api_v1_chats_accept_or_reject_room_request_retrieve
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: user_room_request_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptOrRejectUserRoomRequest'
+          description: ''
+    put:
+      operationId: api_v1_chats_accept_or_reject_room_request_update
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: user_room_request_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptOrRejectUserRoomRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AcceptOrRejectUserRoomRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AcceptOrRejectUserRoomRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptOrRejectUserRoomRequest'
+          description: ''
+    patch:
+      operationId: api_v1_chats_accept_or_reject_room_request_partial_update
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: user_room_request_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAcceptOrRejectUserRoomRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAcceptOrRejectUserRoomRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAcceptOrRejectUserRoomRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptOrRejectUserRoomRequest'
+          description: ''
+    delete:
+      operationId: api_v1_chats_accept_or_reject_room_request_destroy
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: user_room_request_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/chats/edit-or-delete-messages/{room_name}/:
+    get:
+      operationId: api_v1_chats_edit_or_delete_messages_retrieve
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditOrDeleteMessage'
+          description: ''
+    put:
+      operationId: api_v1_chats_edit_or_delete_messages_update
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditOrDeleteMessage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EditOrDeleteMessage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EditOrDeleteMessage'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditOrDeleteMessage'
+          description: ''
+    patch:
+      operationId: api_v1_chats_edit_or_delete_messages_partial_update
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEditOrDeleteMessage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEditOrDeleteMessage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEditOrDeleteMessage'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditOrDeleteMessage'
+          description: ''
+    delete:
+      operationId: api_v1_chats_edit_or_delete_messages_destroy
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/chats/edit-or-delete-room/{room_name}/:
+    get:
+      operationId: api_v1_chats_edit_or_delete_room_retrieve
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+          description: ''
+    put:
+      operationId: api_v1_chats_edit_or_delete_room_update
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Room'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Room'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+          description: ''
+    patch:
+      operationId: api_v1_chats_edit_or_delete_room_partial_update
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRoom'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRoom'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRoom'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+          description: ''
+    delete:
+      operationId: api_v1_chats_edit_or_delete_room_destroy
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/chats/get-message/{other_user_id}/:
+    get:
+      operationId: api_v1_chats_get_message_list
+      parameters:
+      - in: path
+        name: other_user_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+          description: ''
+  /api/v1/chats/get-user-in-room/{room_name}/:
+    get:
+      operationId: api_v1_chats_get_user_in_room_list
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAllUsersInTheRoom'
+          description: ''
+  /api/v1/chats/list-or-create-room/:
+    get:
+      operationId: api_v1_chats_list_or_create_room_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Room'
+          description: ''
+    post:
+      operationId: api_v1_chats_list_or_create_room_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Room'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Room'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+          description: ''
+  /api/v1/chats/remove-user-from-room/{room_name}/{username}/:
+    post:
+      operationId: api_v1_chats_remove_user_from_room_create
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/chats/user-leave-room/{room_name}/:
+    post:
+      operationId: api_v1_chats_user_leave_room_create
+      parameters:
+      - in: path
+        name: room_name
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/chats/user-room-request/:
+    get:
+      operationId: api_v1_chats_user_room_request_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JoinRoomRequest'
+          description: ''
+    post:
+      operationId: api_v1_chats_user_room_request_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoinRoomRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/JoinRoomRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/JoinRoomRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoinRoomRequest'
+          description: ''
+  /api/v1/chats/user-rooms/:
+    get:
+      operationId: api_v1_chats_user_rooms_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JoinRoomRequest'
+          description: ''
+  /api/v1/currencies/convert-currency/:
+    get:
+      operationId: api_v1_currencies_convert_currency_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/friendships/accept-friend-request/{friend_request_id}/:
+    put:
+      operationId: api_v1_friendships_accept_friend_request_update
+      parameters:
+      - in: path
+        name: friend_request_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptFriendRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AcceptFriendRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AcceptFriendRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptFriendRequest'
+          description: ''
+    patch:
+      operationId: api_v1_friendships_accept_friend_request_partial_update
+      parameters:
+      - in: path
+        name: friend_request_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAcceptFriendRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAcceptFriendRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAcceptFriendRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptFriendRequest'
+          description: ''
+  /api/v1/friendships/send-friend-request/:
+    get:
+      operationId: api_v1_friendships_send_friend_request_retrieve
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendFriendRequest'
+          description: ''
+    post:
+      operationId: api_v1_friendships_send_friend_request_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendFriendRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendFriendRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendFriendRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendFriendRequest'
+          description: ''
+  /api/v1/friendships/user-cancel-or-reject-friend-request/{friend_request_id}:
+    delete:
+      operationId: api_v1_friendships_user_cancel_or_reject_friend_request_destroy
+      parameters:
+      - in: path
+        name: friend_request_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/friendships/user-friends/:
+    get:
+      operationId: api_v1_friendships_user_friends_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserFriends'
+          description: ''
+  /api/v1/friendships/user-received-friend-requests/:
+    get:
+      operationId: api_v1_friendships_user_received_friend_requests_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReceivedFriendRequest'
+          description: ''
+  /api/v1/friendships/user-sent-friend-requests/:
+    get:
+      operationId: api_v1_friendships_user_sent_friend_requests_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSentFriendRequest'
+          description: ''
+  /api/v1/posts/comment/:
+    get:
+      operationId: api_v1_posts_comment_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentToPost'
+          description: ''
+    post:
+      operationId: api_v1_posts_comment_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentToPost'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentToPost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentToPost'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentToPost'
+          description: ''
+  /api/v1/posts/comments-to-post/{post_id}/:
+    get:
+      operationId: api_v1_posts_comments_to_post_list
+      parameters:
+      - in: path
+        name: post_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentToPost'
+          description: ''
+    post:
+      operationId: api_v1_posts_comments_to_post_create
+      parameters:
+      - in: path
+        name: post_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentToPost'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CommentToPost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CommentToPost'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentToPost'
+          description: ''
+  /api/v1/posts/create-post/:
+    get:
+      operationId: api_v1_posts_create_post_list
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+          description: ''
+    post:
+      operationId: api_v1_posts_create_post_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Post'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Post'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+  /api/v1/posts/make-reaction-to-post/:
+    post:
+      operationId: api_v1_posts_make_reaction_to_post_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReactionToPost'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReactionToPost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReactionToPost'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReactionToPost'
+          description: ''
+  /api/v1/posts/post-by/{username}/{post_id}/:
+    get:
+      operationId: api_v1_posts_post_by_retrieve
+      parameters:
+      - in: path
+        name: post_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+  /api/v1/posts/remove-reaction-from-post/{post_reaction_id}/:
+    get:
+      operationId: api_v1_posts_remove_reaction_from_post_retrieve
+      parameters:
+      - in: path
+        name: post_reaction_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReactionToPost'
+          description: ''
+    delete:
+      operationId: api_v1_posts_remove_reaction_from_post_destroy
+      parameters:
+      - in: path
+        name: post_reaction_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/posts/replies-to-comment/{parent_comment_id}/:
+    get:
+      operationId: api_v1_posts_replies_to_comment_list
+      parameters:
+      - in: path
+        name: parent_comment_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RepliesToComment'
+          description: ''
+  /api/v1/posts/reply-to-comment/:
+    post:
+      operationId: api_v1_posts_reply_to_comment_create
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplyToComment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReplyToComment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReplyToComment'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReplyToComment'
+          description: ''
+  /api/v1/posts/update-post/{post_id}/:
+    get:
+      operationId: api_v1_posts_update_post_retrieve
+      parameters:
+      - in: path
+        name: post_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatePost'
+          description: ''
+    put:
+      operationId: api_v1_posts_update_post_update
+      parameters:
+      - in: path
+        name: post_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePost'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdatePost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdatePost'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatePost'
+          description: ''
+    patch:
+      operationId: api_v1_posts_update_post_partial_update
+      parameters:
+      - in: path
+        name: post_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdatePost'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdatePost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdatePost'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatePost'
+          description: ''
+components:
+  schemas:
+    AcceptFriendRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+    AcceptOrRejectUserRoomRequest:
+      type: object
+      properties:
+        decision:
+          type: string
+    BlockUser:
+      type: object
+      properties:
+        blocked_user:
+          type: string
+          format: uuid
+    ChangePassword:
+      type: object
+      properties:
+        old_password:
+          type: string
+          writeOnly: true
+          minLength: 8
+        new_password:
+          type: string
+          writeOnly: true
+          minLength: 8
+        confirm_password:
+          type: string
+          writeOnly: true
+          minLength: 8
+    CommentToPost:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        post:
+          type: string
+          format: uuid
+        user_that_comment:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        comment:
+          type: string
+        edited:
+          type: boolean
+        comment_to_post_images:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentToPostImages'
+          readOnly: true
+        uploaded_comment_to_post_images:
+          type: array
+          items:
+            type: string
+            format: uri
+          maxItems: 2
+      required:
+      - comment_to_post_images
+      - id
+      - user_that_comment
+    CommentToPostImages:
+      type: object
+      properties:
+        post_image:
+          type: string
+          format: uri
+          nullable: true
+    EditOrDeleteMessage:
+      type: object
+      properties:
+        edit_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        message:
+          type: string
+    GetAllUsersInTheRoom:
+      type: object
+      properties:
+        room_member:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          readOnly: true
+        room:
+          type: string
+          readOnly: true
+      required:
+      - room
+      - room_member
+    JoinRoomRequest:
+      type: object
+      properties:
+        room_name:
+          type: string
+          readOnly: true
+        room:
+          type: string
+          format: uuid
+        room_request:
+          $ref: '#/components/schemas/RoomRequestEnum'
+      required:
+      - room_name
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        sender:
+          type: string
+        receiver:
+          type: string
+        edit_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        message:
+          type: string
+      required:
+      - id
+    PatchedAcceptFriendRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+    PatchedAcceptOrRejectUserRoomRequest:
+      type: object
+      properties:
+        decision:
+          type: string
+    PatchedEditOrDeleteMessage:
+      type: object
+      properties:
+        edit_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        message:
+          type: string
+    PatchedRoom:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        room_name:
+          type: string
+          minLength: 5
+        description:
+          type: string
+        number_of_persons:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+    PatchedUpdatePost:
+      type: object
+      properties:
+        post_details:
+          type: string
+        post_state:
+          $ref: '#/components/schemas/PostStateEnum'
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        post_details:
+          type: string
+        post_state:
+          $ref: '#/components/schemas/PostStateEnum'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostImage'
+        post_images:
+          type: array
+          items:
+            type: string
+            format: uri
+      required:
+      - id
+    PostImage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        post_image:
+          type: string
+          format: uri
+      required:
+      - id
+    PostStateEnum:
+      enum:
+      - draft
+      - published
+      type: string
+      description: |-
+        * `draft` - draft
+        * `published` - published
+    ReactionEnum:
+      enum:
+      - UPVOTE
+      - DOWNVOTE
+      - ANGRY
+      - SAD
+      type: string
+      description: |-
+        * `UPVOTE` - UPVOTE
+        * `DOWNVOTE` - DOWNVOTE
+        * `ANGRY` - ANGRY
+        * `SAD` - SAD
+    ReactionToPost:
+      type: object
+      properties:
+        user_post:
+          type: string
+          format: uuid
+        user_that_react:
+          type: string
+          format: uuid
+        reaction:
+          $ref: '#/components/schemas/ReactionEnum'
+    ReceivedFriendRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        receiver:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+      required:
+      - id
+      - receiver
+    Registration:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        image:
+          type: string
+          format: uri
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          minLength: 8
+        date_of_birth:
+          type: string
+          format: date-time
+          nullable: true
+    RepliesToComment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        comment:
+          type: string
+        user_that_comment:
+          $ref: '#/components/schemas/User'
+      required:
+      - id
+    ReplyToComment:
+      type: object
+      properties:
+        post:
+          type: string
+          format: uuid
+        parent_comment:
+          type: string
+          format: uuid
+          nullable: true
+        comment:
+          type: string
+    Room:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        room_name:
+          type: string
+          minLength: 5
+        description:
+          type: string
+        number_of_persons:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+      required:
+      - id
+      - room_name
+    RoomRequestEnum:
+      enum:
+      - 0
+      - 1
+      type: integer
+      description: |-
+        * `0` - PENDING
+        * `1` - ACCEPTED
+    SendFriendRequest:
+      type: object
+      properties:
+        sender:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+        receiver:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+      required:
+      - receiver
+      - sender
+    SignIn:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+    StatusEnum:
+      enum:
+      - accepted
+      - pending
+      type: string
+      description: |-
+        * `accepted` - accepted
+        * `pending` - pending
+    UpdatePost:
+      type: object
+      properties:
+        post_details:
+          type: string
+        post_state:
+          $ref: '#/components/schemas/PostStateEnum'
+    UpdateProfile:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        address:
+          type: string
+          maxLength: 500
+        image:
+          type: string
+          format: uri
+    User:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        image:
+          type: string
+          format: uri
+    UserFriends:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uuid
+        friend:
+          $ref: '#/components/schemas/User'
+      required:
+      - user
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - id
+    UserSentFriendRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        receiver:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+      required:
+      - id
+      - receiver
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -7,10 +7,9 @@ User = get_user_model()
 
 # class IsPostOwner(BasePermission):
 #     message = "you can only update your post"
-    
+
 #     def has_permission(self, request, view):
 #         return request.user and request.user.is_authenticated
-
 
 
 class IsUserBlocked(BasePermission):
@@ -18,9 +17,9 @@ class IsUserBlocked(BasePermission):
 
     def has_permission(self, request, view):
         user = User.objects.filter(username=view.kwargs["username"]).first()
-        
-        if user is not None:
-            is_other_user_blocked_by_user = BlockedList.objects.filter(user=user, other_user=request.user)
-            return not is_other_user_blocked_by_user.exists()
-      
 
+        if user is not None:
+            is_other_user_blocked_by_user = BlockedList.objects.filter(
+                user=user, other_user=request.user
+            )
+            return not is_other_user_blocked_by_user.exists()

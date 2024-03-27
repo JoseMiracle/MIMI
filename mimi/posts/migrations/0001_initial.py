@@ -8,7 +8,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -17,45 +16,119 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Post',
+            name="Post",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('last_modified_at', models.DateTimeField(auto_now=True)),
-                ('post_details', models.TextField()),
-                ('edited', models.BooleanField(default=False)),
-                ('post_state', models.CharField(choices=[('draft', 'draft'), ('published', 'published')], default='draft', max_length=11)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("last_modified_at", models.DateTimeField(auto_now=True)),
+                ("post_details", models.TextField()),
+                ("edited", models.BooleanField(default=False)),
+                (
+                    "post_state",
+                    models.CharField(
+                        choices=[("draft", "draft"), ("published", "published")],
+                        default="draft",
+                        max_length=11,
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='PostImage',
+            name="PostImage",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('last_modified_at', models.DateTimeField(auto_now=True)),
-                ('post_image', models.ImageField(blank=True, upload_to=mimi.posts.models.post_images_upload_location)),
-                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='posts.post')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("last_modified_at", models.DateTimeField(auto_now=True)),
+                (
+                    "post_image",
+                    models.ImageField(
+                        blank=True,
+                        upload_to=mimi.posts.models.post_images_upload_location,
+                    ),
+                ),
+                (
+                    "post",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="images",
+                        to="posts.post",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='PostReaction',
+            name="PostReaction",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('last_modified_at', models.DateTimeField(auto_now=True)),
-                ('reaction', models.CharField(choices=[('UPVOTE', 'UPVOTE'), ('DOWNVOTE', 'DOWNVOTE'), ('ANGRY', 'ANGRY'), ('SAD', 'SAD')], max_length=20)),
-                ('user_post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='post_reactions', to='posts.post')),
-                ('user_that_react', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("last_modified_at", models.DateTimeField(auto_now=True)),
+                (
+                    "reaction",
+                    models.CharField(
+                        choices=[
+                            ("UPVOTE", "UPVOTE"),
+                            ("DOWNVOTE", "DOWNVOTE"),
+                            ("ANGRY", "ANGRY"),
+                            ("SAD", "SAD"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "user_post",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="post_reactions",
+                        to="posts.post",
+                    ),
+                ),
+                (
+                    "user_that_react",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]
