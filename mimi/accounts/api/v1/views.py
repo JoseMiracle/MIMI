@@ -3,11 +3,10 @@ from mimi.accounts.api.v1.serializers import (
     RegistrationSerializer,
     SignInSerializer,
     ChangePasswordSerializer,
-    UpdateProfileSerializer,
+    ProfileSerializer,
     ActivateAccountSerializer,
     BlockUserSerializer,
     OtpResetPaswordSerializer,
-    UserProfileSerializer,
 )
 
 
@@ -62,7 +61,7 @@ class ChangePasswordAPIView(generics.GenericAPIView):
 
 class UserProfileAPIView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = UserProfileSerializer
+    serializer_class = ProfileSerializer
 
     def get_object(self):
         return self.request.user
@@ -73,9 +72,8 @@ class UserProfileAPIView(generics.RetrieveAPIView):
 
 class UpdateProfileAPIView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = UpdateProfileSerializer
-    queryset = User.objects.all()
-
+    serializer_class = ProfileSerializer
+    
     def get_object(self):
         return self.request.user
 

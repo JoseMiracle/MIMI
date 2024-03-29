@@ -55,7 +55,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "image"]
+        fields = ["id", "first_name", "last_name", "image"]
 
 
 class ActivateAccountSerializer(serializers.Serializer):
@@ -74,6 +74,13 @@ class ActivateAccountSerializer(serializers.Serializer):
             user.save()
             attrs["message"] = "Account Activated"
             return attrs
+
+class ProfileSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+
+    class Meta:
+        model = User
+        fields = ["id","first_name", "last_name", "address", "image"]
 
 
 class SignInSerializer(serializers.Serializer):
@@ -101,7 +108,7 @@ class SignInSerializer(serializers.Serializer):
         return {
             "refresh": str(refresh),
             "access_token": str(refresh.access_token),
-            "user_profile": UserSerializer(instance).data,
+            "profile": ProfileSerializer(instance).data,
         }
 
 
@@ -143,17 +150,6 @@ class ChangePasswordSerializer(serializers.Serializer):
             attrs["status"] = "true"
             return attrs
 
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["id", "first_name", "username", "last_name"]
-
-
-class UpdateProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["first_name", "last_name", "address", "image"]
 
 
 class BlockUserSerializer(serializers.ModelSerializer):
