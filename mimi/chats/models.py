@@ -65,3 +65,7 @@ class RoomMessages(BaseModel):
     message = models.TextField()
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     is_locked = models.BooleanField(default=False)
+
+class ChatIDs(BaseModel):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender_chats")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver_chats")

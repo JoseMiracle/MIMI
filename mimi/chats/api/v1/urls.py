@@ -10,6 +10,7 @@ from mimi.chats.api.v1.views import (
     RemoveUserFromARoomAPIView,
     UserLeaveRoomAPIView,
     MessageAPIView,
+    GenerateUniqueIDForChatAPIView,
 )
 
 app_name = "chats"
@@ -55,4 +56,6 @@ urlpatterns = [
         MessageAPIView.as_view(),
         name="get_message",
     ),
+
+    path('generate-chat-id/', GenerateUniqueIDForChatAPIView.as_view(), name='generate_chat_id')
 ]

@@ -91,3 +91,6 @@ class GetAllUsersInTheRoomSerializer(serializers.ModelSerializer):
 class RemoveUserFromARoomSerializer(serializers.Serializer):
     username = serializers.CharField(allow_blank=False)
     room_name = serializers.CharField(allow_blank=False)
+
+
+

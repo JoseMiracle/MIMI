@@ -6,7 +6,7 @@ from asgiref.sync import sync_to_async
 
 class DirectMessageConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.id = self.scope['url_route']['kwargs']['friendship_id']
+        self.id = self.scope['url_route']['kwargs']['chat_id']
         self.chat_room_name = f'chat_{self.id}'
 
         await self.accept()
