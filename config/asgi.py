@@ -9,9 +9,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings.DJANGO_SETTINGS_MODULE)
 django_asgi_application = get_asgi_application()
 
 from config import routing
-from config.jwt_middleware import JWTAuthMiddleware  # Adjust the import path if necessary
+from config.jwt_middleware import JWTAuthMiddleware 
 
-# Define the ASGI application with ProtocolTypeRouter
+
+# Defining the ASGI application with ProtocolTypeRouter
 application = ProtocolTypeRouter(
     {
         'http': django_asgi_application,

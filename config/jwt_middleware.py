@@ -1,6 +1,4 @@
-
 from rest_framework_simplejwt.tokens import AccessToken
-from django.contrib.auth.models import AnonymousUser
 from channels.db import database_sync_to_async
 from channels.middleware import BaseMiddleware
 
@@ -11,10 +9,10 @@ logger = logging.getLogger(__name__)
 class JWTAuthMiddleware(BaseMiddleware):
     
     async def __call__(self, scope, receive, send):
-        
+    
         token = self.get_token_from_scope(scope)
         
-        if token:
+        if token != None:
             user = await self.get_user_from_token(token) 
             if user:
                 scope['user'] = user
@@ -22,7 +20,7 @@ class JWTAuthMiddleware(BaseMiddleware):
             else:
                 scope['error'] = 'User not Found'
 
-        if token == 'No auth token':
+        if token == None:
             scope['error'] = 'Provide an auth token'    
     
                 
@@ -33,12 +31,15 @@ class JWTAuthMiddleware(BaseMiddleware):
         headers = dict(scope.get("headers", []))
 
         auth_header = headers.get(b'authorization', b'').decode('utf-8')
+        print(auth_header)
 
         if auth_header.startswith('Bearer '):
             return auth_header.split(' ')[1]
         
-        if auth_header is None :
-            return 'No auth token'  
+        else:
+            scope['error'] = 'No auth token'
+            return None
+        
     @database_sync_to_async
     def get_user_from_token(self, token):
             try:

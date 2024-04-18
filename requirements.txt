@@ -16,4 +16,5 @@ pillow==10.1.0
 drf-standardized-errors==0.13.0
 twisted[tls,http2]==23.10.0
 ruff==0.3.4
+whitenoise==6.6.0
 drf-spectacular==0.27.1
