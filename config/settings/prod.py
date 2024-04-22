@@ -34,5 +34,5 @@ DATABASES = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3172",
     "http://localhost:5174",
-    "https://cabashexchange.netlify.app/"
+    "https://cabashexchange.netlify.app"
 ]
