@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)  # Adjust the logging level as needed
 
 
 class CurrencyConverterAPIView(APIView):
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         if ("to" and "from" and "amount") not in request.data:
             return Response(
                 {"error": "pls provide *to* and *from* and *amount* "},
