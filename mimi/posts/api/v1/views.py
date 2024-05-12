@@ -97,7 +97,6 @@ class CommentToPostAPIView(generics.ListCreateAPIView):
         comments_to_post_objs = CommentToPost.objects.filter(
             post=post, parent_comment=None
         )
-        print(comments_to_post_objs.count())
         return comments_to_post_objs
 
     def get(self, request, *args, **kwargs):
@@ -121,9 +120,6 @@ class ReplyToCommentAPIView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
-
-
-generics.RetrieveAPIView
 
 
 class RepliesToCommentAPIView(generics.ListAPIView):

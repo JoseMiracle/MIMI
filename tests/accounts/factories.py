@@ -4,7 +4,6 @@ from django.core.files.base import ContentFile
 import factory
 
 
-
 User = get_user_model()
 
 class UserFactory(DjangoModelFactory):

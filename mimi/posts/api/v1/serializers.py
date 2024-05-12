@@ -50,14 +50,20 @@ class PostSerializer(serializers.ModelSerializer):
     # post_reactions = ReactionToPostSerializer(many=True)
 
     images = PostImageSerializer(many=True)
-    post_images = serializers.ListField(
-        child=serializers.ImageField(required=False, allow_empty_file=True),
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(allow_empty_file=False),
         required=False,
     )
 
     class Meta:
         model = Post
-        fields = ["id", "post_details", "post_state", "images", "post_images"]
+        fields = [
+            "id", 
+            "post_details", 
+            "post_state", 
+            "images", 
+            "uploaded_images"
+            ]
 
     @transaction.atomic
     def create(self, validated_data):
@@ -107,7 +113,7 @@ class CommentToPostSerializer(serializers.ModelSerializer):
     comment_to_post_images = CommentToPostImagesSerializer(read_only=True, many=True)
     user_that_comment = UserSerializer(read_only=True)
     uploaded_comment_to_post_images = serializers.ListField(
-        child=serializers.ImageField(allow_empty_file=False), max_length=2
+        child=serializers.ImageField(allow_empty_file=False), max_length=1
     )
 
     class Meta:

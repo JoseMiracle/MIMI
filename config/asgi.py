@@ -17,8 +17,10 @@ application = ProtocolTypeRouter(
     {
         'http': django_asgi_application,
         'websocket': 
+        JWTAuthMiddleware(
             URLRouter(
                 routing.websocket_urlpatterns
             )
+        )
     }
 )

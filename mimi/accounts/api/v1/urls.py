@@ -7,6 +7,7 @@ from mimi.accounts.api.v1.views import (
     ActivateAccountAPIView,
     BlockUserAPIView,
     UserProfileAPIView,
+    MimiToMaybellAPIView
 )
 
 app_name = "accounts"
@@ -21,4 +22,8 @@ urlpatterns = [
     path("change-password/", ChangePasswordAPIView.as_view(), name="change_password"),
     path("update-profile/", UpdateProfileAPIView.as_view(), name="update_profile"),
     path("profile/", UserProfileAPIView.as_view(), name="profile"),
+
+    # MIMI TO MAYBELL
+    path('mimi-to-maybell/', MimiToMaybellAPIView.as_view(), name='mimi_to_maybell')
+
 ]

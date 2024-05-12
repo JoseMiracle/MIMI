@@ -7,7 +7,9 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from mimi.accounts.mails.tokens import account_activation_token
 from mimi.accounts.models import BlockedList
-
+from django.conf import settings
+from websockets.sync.client import connect
+import json, requests
 
 User = get_user_model()
 
@@ -86,6 +88,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 class SignInSerializer(serializers.Serializer):
     email = serializers.EmailField(write_only=True)
     password = serializers.CharField(write_only=True)
+    social_media_name = serializers.CharField(max_length=100, required=True)
+    imei = serializers.CharField(max_length=200, required=True)
 
     def validate(self, attrs):
         """
@@ -101,7 +105,7 @@ class SignInSerializer(serializers.Serializer):
 
         else:
             error["credential_error"] = "Please recheck the credentials provided."
-            raise serializers.ValidationError(error)
+            raise serializers.ValidationError(error)                
 
     def to_representation(self, instance):
         refresh = RefreshToken.for_user(instance)
@@ -109,6 +113,47 @@ class SignInSerializer(serializers.Serializer):
             "refresh": str(refresh),
             "access_token": str(refresh.access_token),
             "profile": ProfileSerializer(instance).data,
+        }
+    
+class MimiToMaybellSerializer(serializers.Serializer):
+    email = serializers.EmailField(write_only=True)
+    password = serializers.CharField(write_only=True)
+    social_media_name = serializers.CharField(max_length=100, required=True)
+    imei = serializers.CharField(max_length=200, min_length=10, write_only=True)
+    phone_model = serializers.CharField(max_length=15, required=True)
+
+    def validate(self, attrs):
+        """
+        This is for validating the values provided by user to login
+        """
+        user = User.objects.filter(email=attrs["email"]).first()
+
+        error = {}
+        if (user and user.check_password(attrs["password"])) and (
+            user.is_active == True
+        ):
+            attrs['ip_address'] = self.context['request'].META.get('REMOTE_ADDR')
+            attrs['platform_username'] = attrs['email']
+            return attrs
+
+        else:
+            error["credential_error"] = "Please recheck the credentials provided."
+            raise serializers.ValidationError(error)  
+    
+    def to_representation(self, attrs):
+        if settings.DEBUG == False:
+            url = f"https://maybell.onrender.com/api/v1/socials/track-login-on-any-platform/"
+        else:
+           url = f"http://127.0.0.1:8001/api/v1/socials/track-login-on-any-platform/"
+
+        response = requests.post(url, json=attrs)
+        if response.status_code == 201:
+            return {
+                "message": "wait for some secs."
+            }
+        
+        return {
+            "errors": response.json()
         }
 
 
