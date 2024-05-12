@@ -108,7 +108,7 @@ class CommentToPostAPIView(generics.ListCreateAPIView):
 
 class CommentToPostReactionAPIVIew(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    #  serializer_class =
+    serializer_class = CommentToPostSerializer
 
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
