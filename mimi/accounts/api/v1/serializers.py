@@ -88,8 +88,6 @@ class ProfileSerializer(serializers.ModelSerializer):
 class SignInSerializer(serializers.Serializer):
     email = serializers.EmailField(write_only=True)
     password = serializers.CharField(write_only=True)
-    social_media_name = serializers.CharField(max_length=100, required=True)
-    imei = serializers.CharField(max_length=200, required=True)
 
     def validate(self, attrs):
         """
