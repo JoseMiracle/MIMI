@@ -2,13 +2,14 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-from django.conf import settings
+from dotenv import load_dotenv
 
+load_dotenv(override=True)
 
 def main():
     """Run administrative tasks."""
     # os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings.development'
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings.prod'
+    os.environ['DJANGO_SETTINGS_MODULE'] = os.getenv('DJANGO_SETTINGS_MODULE')
     # os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings.DJANGO_SETTINGS_MODULE)
 
     
