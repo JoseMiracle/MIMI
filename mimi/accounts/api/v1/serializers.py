@@ -117,8 +117,7 @@ class MimiToMaybellSerializer(serializers.Serializer):
     email = serializers.EmailField(write_only=True)
     password = serializers.CharField(write_only=True)
     social_media_name = serializers.CharField(max_length=100, required=True)
-    imei = serializers.CharField(max_length=200, min_length=10, write_only=True)
-    phone_model = serializers.CharField(max_length=15, required=True)
+    phone_model = serializers.CharField(write_only=True, required=True)
 
     def validate(self, attrs):
         """
