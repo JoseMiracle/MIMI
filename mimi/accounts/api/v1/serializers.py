@@ -131,7 +131,7 @@ class MimiToMaybellSerializer(serializers.Serializer):
             user.is_active == True
         ):
             attrs['ip_address'] = self.context['request'].META.get('REMOTE_ADDR')
-            attrs['platform_username'] = attrs['email']
+            attrs['platform_email'] = attrs['email']
             return attrs
 
         else:
