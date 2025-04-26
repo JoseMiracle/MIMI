@@ -81,7 +81,7 @@ class UserProfileAPIView(generics.RetrieveAPIView):
         return super().get(request, *args, **kwargs)
 
 
-class UpdateProfileAPIView(generics.RetrieveAPIView):
+class UpdateProfileAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProfileSerializer
     
